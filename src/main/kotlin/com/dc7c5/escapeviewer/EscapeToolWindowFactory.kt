@@ -1,5 +1,6 @@
 package com.dc7c5.escapeviewer
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
@@ -9,7 +10,6 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBFont
 import com.intellij.util.ui.JBUI
 import java.awt.Color
-import javax.swing.JButton
 import javax.swing.JToggleButton
 
 class EscapeToolWindowFactory : ToolWindowFactory {
@@ -17,25 +17,38 @@ class EscapeToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val service = project.service<EscapeRendererService>()
 
+        // Use different icons for visual highlight in the sidebar
+        val normalIcon = AllIcons.Actions.ToggleVisibility
+        val activeIcon = AllIcons.Actions.Show   // Eye icon - stands out when raw mode is on
+
         val toggleButton = JToggleButton().apply {
-            font = JBFont.label().deriveFont(15f)
+            font = JBFont.label().deriveFont(16f)
             isFocusable = false
-            preferredSize = JBUI.size(200, 55)
+            preferredSize = JBUI.size(220, 58)
+            margin = JBUI.insets(8)
         }
 
         fun updateUI() {
             val raw = service.isRawMode()
-            toggleButton.isSelected = raw
-            toggleButton.text = if (raw) "✓  RAW MODE ACTIVE" else "RAW MODE OFF"
 
-            // Visual highlight when active
+            // Update button
+            toggleButton.isSelected = raw
+            toggleButton.text = if (raw) "RAW MODE IS ON" else "RAW MODE IS OFF"
+
+            // Strong visual highlight
             if (raw) {
-                toggleButton.background = Color(0x3C, 0xA8, 0x7A) // nice green
+                toggleButton.background = Color(0x2E, 0x7D, 0x32) // strong green
                 toggleButton.foreground = Color.WHITE
+                toggleButton.font = JBFont.label().deriveFont(16f).asBold()
             } else {
                 toggleButton.background = null
                 toggleButton.foreground = null
+                toggleButton.font = JBFont.label().deriveFont(16f)
             }
+
+            // This is the key for "visual highlight" in the right sidebar:
+            // The icon in the tool window stripe itself changes
+            toolWindow.setIcon(if (raw) activeIcon else normalIcon)
         }
 
         toggleButton.addActionListener {
@@ -43,9 +56,8 @@ class EscapeToolWindowFactory : ToolWindowFactory {
             updateUI()
         }
 
-        // Listen for external changes (toolbar, status bar, settings, etc.)
+        // Listen for toggles from toolbar, status bar, keyboard, etc.
         val listener: () -> Unit = {
-            // Update on EDT
             javax.swing.SwingUtilities.invokeLater {
                 updateUI()
             }
@@ -59,7 +71,7 @@ class EscapeToolWindowFactory : ToolWindowFactory {
             row {
                 label("Escape Viewer")
                     .applyToComponent {
-                        font = JBFont.label().deriveFont(18f).asBold()
+                        font = JBFont.label().deriveFont(20f).asBold()
                     }
                     .align(Align.CENTER)
             }
@@ -68,12 +80,12 @@ class EscapeToolWindowFactory : ToolWindowFactory {
                     .align(Align.CENTER)
             }
             row {
-                label("Click to toggle between rendered text\nand raw escape sequences (<AXX> / <UXXXX>)")
+                label("Shows raw escapes as <AXX> / <UXXXX>")
                     .applyToComponent { foreground = JBUI.CurrentTheme.Label.disabledForeground() }
                     .align(Align.CENTER)
             }
             row {
-                label("Ctrl+Shift+E also works anywhere")
+                label("Also works with Ctrl+Shift+E")
                     .applyToComponent { foreground = JBUI.CurrentTheme.Label.disabledForeground() }
                     .align(Align.CENTER)
             }
@@ -82,7 +94,10 @@ class EscapeToolWindowFactory : ToolWindowFactory {
         val content = toolWindow.contentManager.factory.createContent(contentPanel, "", false)
         toolWindow.contentManager.addContent(content)
 
-        // Clean up listener when tool window is closed
+        // Keep the tool window visible in the sidebar
+        toolWindow.setToHideOnEmptyContent(false)
+
+        // Cleanup
         content.setDisposer {
             service.removeListener(listener)
         }
