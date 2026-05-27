@@ -1,0 +1,11 @@
+<idea-plugin>
+    <!-- Java-specific extensions. Only loaded when the Java plugin is present. -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Annotator for escape highlighting in Java -->
+        <annotator language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
+
+        <!-- Inlay Hints Provider for Java -->
+        <codeInsight.inlayHintsProvider language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+    </extensions>
+</idea-plugin>

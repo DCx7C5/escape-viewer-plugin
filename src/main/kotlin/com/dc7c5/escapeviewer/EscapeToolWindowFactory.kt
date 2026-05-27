@@ -18,18 +18,19 @@ class EscapeToolWindowFactory : ToolWindowFactory {
         val service = project.service<EscapeRendererService>()
 
         val toggleButton = JToggleButton().apply {
-            font = JBFont.label().deriveFont(16f)
+            font = JBFont.label().deriveFont(15f)
             isFocusable = false
-            preferredSize = JBUI.size(180, 60)
+            preferredSize = JBUI.size(200, 55)
         }
 
         fun updateUI() {
             val raw = service.isRawMode()
             toggleButton.isSelected = raw
-            toggleButton.text = if (raw) "RAW MODE ON" else "RAW MODE OFF"
+            toggleButton.text = if (raw) "✓  RAW MODE ACTIVE" else "RAW MODE OFF"
 
+            // Visual highlight when active
             if (raw) {
-                toggleButton.background = JBUI.CurrentTheme.Focus.focusColor()
+                toggleButton.background = Color(0x3C, 0xA8, 0x7A) // nice green
                 toggleButton.foreground = Color.WHITE
             } else {
                 toggleButton.background = null

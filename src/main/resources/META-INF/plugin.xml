@@ -8,7 +8,8 @@
     </description>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.java</depends>
+    <!-- Java support is optional so the plugin works in PyCharm, WebStorm, etc. -->
+    <depends optional="true" config-file="java.xml">com.intellij.modules.java</depends>
     <!-- Made optional for better compatibility with K2 mode in 2025.1+ -->
     <depends optional="true">org.jetbrains.kotlin</depends>
 
@@ -23,13 +24,11 @@
         <statusBarWidgetFactory implementation="com.dc7c5.escapeviewer.EscapeStatusBarWidgetFactory"/>
 
         <!-- Annotator for escape highlighting -->
-        <annotator language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
         <annotator language="kotlin" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
         <annotator language="Python" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
         <annotator language="JavaScript" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
 
         <!-- Inlay Hints Provider for true visual replacement -->
-        <codeInsight.inlayHintsProvider language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
         <codeInsight.inlayHintsProvider language="kotlin" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
         <codeInsight.inlayHintsProvider language="Python" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
         <codeInsight.inlayHintsProvider language="JavaScript" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
