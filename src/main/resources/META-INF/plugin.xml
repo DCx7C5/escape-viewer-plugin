@@ -1,0 +1,48 @@
+<idea-plugin>
+    <id>com.dc7c5.escapeviewer</id>
+    <name>Escape Viewer</name>
+    <vendor email="dc7c5@example.com" url="https://github.com/dc7c5">DC7C5</vendor>
+    <description>
+        Toggle between rendered characters and raw escape sequences in string literals.
+        Supports \xHH (ASCII) and \uXXXX (Unicode) with &lt;AXX&gt; and &lt;UXXXX&gt; display in raw mode.
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Settings -->
+        <projectConfigurable
+            instance="com.dc7c5.escapeviewer.settings.EscapeSettingsConfigurable"
+            displayName="Escape Viewer"
+            id="com.dc7c5.escapeviewer.settings"/>
+
+        <!-- Status Bar Widget -->
+        <statusBarWidgetFactory implementation="com.dc7c5.escapeviewer.EscapeStatusBarWidgetFactory"/>
+
+        <!-- Annotator for escape highlighting -->
+        <annotator language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
+        <annotator language="kotlin" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
+        <annotator language="Python" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
+        <annotator language="JavaScript" implementationClass="com.dc7c5.escapeviewer.EscapeAnnotator"/>
+
+        <!-- Inlay Hints Provider for true visual replacement -->
+        <codeInsight.inlayHintsProvider language="JAVA" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+        <codeInsight.inlayHintsProvider language="kotlin" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+        <codeInsight.inlayHintsProvider language="Python" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+        <codeInsight.inlayHintsProvider language="JavaScript" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+    </extensions>
+
+    <actions>
+        <action id="EscapeViewer.Toggle"
+                class="com.dc7c5.escapeviewer.EscapeToggleAction"
+                text="Toggle Escape View"
+                description="Switch between rendered and raw escape sequences"
+                icon="AllIcons.Actions.ToggleVisibility">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift E"/>
+        </action>
+    </actions>
+</idea-plugin>
