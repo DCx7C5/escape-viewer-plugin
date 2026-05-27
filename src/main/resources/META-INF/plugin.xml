@@ -33,6 +33,13 @@
         <codeInsight.inlayHintsProvider language="kotlin" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
         <codeInsight.inlayHintsProvider language="Python" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
         <codeInsight.inlayHintsProvider language="JavaScript" implementationClass="com.dc7c5.escapeviewer.EscapeInlayHintsProvider"/>
+
+        <!-- Sidebar Tool Window with prominent toggle -->
+        <toolWindow id="Escape Viewer"
+                    anchor="right"
+                    icon="AllIcons.Actions.ToggleVisibility"
+                    factoryClass="com.dc7c5.escapeviewer.EscapeToolWindowFactory"
+                    canCloseContents="false"/>
     </extensions>
 
     <actions>
