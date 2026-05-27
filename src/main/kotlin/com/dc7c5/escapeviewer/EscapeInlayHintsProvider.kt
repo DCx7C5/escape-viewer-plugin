@@ -7,7 +7,6 @@ import com.intellij.openapi.components.service
 import com.intellij.codeInsight.hints.presentation.PresentationFactory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLiteralExpression
-import org.jetbrains.kotlin.psi.KtStringTemplateExpression
 import java.util.regex.Pattern
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -31,8 +30,7 @@ class EscapeInlayHintsProvider : InlayHintsProvider<EscapeInlayHintsProvider.Set
             override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
                 val text = when (element) {
                     is PsiLiteralExpression -> element.text
-                    is KtStringTemplateExpression -> element.text
-                    else -> return true
+                    else -> element.text   // Kotlin, Python, JavaScript, etc. (language-specific registration ensures correct elements)
                 }
 
                 if (!text.contains('\\')) return true

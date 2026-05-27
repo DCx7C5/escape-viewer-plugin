@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLiteralExpression
-import org.jetbrains.kotlin.psi.KtStringTemplateExpression
 import java.util.regex.Pattern
 import com.dc7c5.escapeviewer.settings.EscapeSettings
 
@@ -26,8 +25,7 @@ class EscapeAnnotator : Annotator {
 
         val text = when (element) {
             is PsiLiteralExpression -> element.text
-            is KtStringTemplateExpression -> element.text
-            else -> return
+            else -> element.text   // Kotlin, Python, JavaScript, etc. (language-specific registration ensures correct elements)
         }
 
         if (!text.contains('\\')) return
